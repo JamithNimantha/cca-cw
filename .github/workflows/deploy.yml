@@ -30,21 +30,17 @@ jobs:
       - name: Check if Stack Exists
         id: check_stack
         run: |
-          aws cloudformation describe-stacks --stack-name stack || echo "StackNotFound=true"
+          if aws cloudformation describe-stacks --stack-name stack &> /dev/null; then
+            echo "StackExists=true"
+          else
+            echo "StackExists=false"
+          fi
         continue-on-error: true
 
       - name: Create or Update Stack
         run: |
-          if [ -n "${{ steps.check_stack.outputs.StackNotFound }}" ]; then
-            aws cloudformation create-stack --stack-name stack --template-body .github/workflows/cloudformation-template.yaml --capabilities CAPABILITY_IAM
+          if [ "${{ steps.check_stack.outputs.StackExists }}" == "true" ]; then
+            aws cloudformation update-stack --stack-name stack --template-body file://.github/workflows/cloudformation-template.yaml --capabilities CAPABILITY_IAM
           else
-            aws cloudformation update-stack --stack-name stack --template-body .github/workflows/cloudformation-template.yaml --capabilities CAPABILITY_IAM
+            aws cloudformation create-stack --stack-name stack --template-body file://.github/workflows/cloudformation-template.yaml --capabilities CAPABILITY_IAM
           fi
-
-      - name: Create Change Set
-        run: |
-          aws cloudformation create-change-set --stack-name stack --template-body .github/workflows/cloudformation-template.yaml --change-set-name my-changeset --capabilities CAPABILITY_IAM
-
-      - name: Execute Change Set
-        run: |
-          aws cloudformation execute-change-set --stack-name stack --change-set-name my-changeset
