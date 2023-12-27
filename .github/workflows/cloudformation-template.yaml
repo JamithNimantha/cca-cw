@@ -4,7 +4,6 @@ Resources:
     Type: 'AWS::S3::Bucket'
     Properties:
       BucketName: 'cca-cw1-bucket-1'
-      AccessControl: 'PublicRead'
   CloudFrontDistribution:
     Type: 'AWS::CloudFront::Distribution'
     Properties:
