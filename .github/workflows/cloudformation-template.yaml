@@ -1,32 +1,29 @@
-AWSTemplateFormatVersion: "2010-09-09"
-
+AWSTemplateFormatVersion: '2010-09-09'
 Resources:
   S3Bucket:
-    Type: "AWS::S3::Bucket"
+    Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: "cca-cw1-bucket-1"
-      AccessControl: PublicRead
-      WebsiteConfiguration:
-        IndexDocument: "index.html"
-        ErrorDocument: "error.html"
-
+      BucketName: 'cca-cw1-bucket-1'
+      AccessControl: 'PublicRead'
   CloudFrontDistribution:
-    Type: "AWS::CloudFront::Distribution"
+    Type: 'AWS::CloudFront::Distribution'
     Properties:
       DistributionConfig:
         Origins:
-          - DomainName: !GetAtt S3Bucket.DomainName
+          - DomainName: !GetAtt [S3Bucket, DomainName]
             Id: S3Origin
-            S3OriginConfig:
-              OriginAccessIdentity: ""
-        DefaultRootObject: "index.html"
+            S3OriginConfig: {}
         Enabled: true
+        DefaultRootObject: 'index.html'
         DefaultCacheBehavior:
           TargetOriginId: S3Origin
-          ForwardedValues:
-            QueryString: true
-          ViewerProtocolPolicy: "redirect-to-https"
-        ViewerCertificate:
-          CloudFrontDefaultCertificate: true
-#        Aliases:
-#          - "your-custom-domain.com"  # Add your custom domain here if applicable
+          ViewerProtocolPolicy: 'redirect-to-https'
+          AllowedMethods:
+            - 'GET'
+            - 'HEAD'
+            - 'OPTIONS'
+Outputs:
+  BucketName:
+    Value: !Ref S3Bucket
+  DistributionId:
+    Value: !Ref CloudFrontDistribution
