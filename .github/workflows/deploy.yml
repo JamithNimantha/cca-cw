@@ -27,20 +27,10 @@ jobs:
         run: |
           aws s3 sync . s3://cca-cw1-bucket --delete --exclude '.*/*' --exclude '.*'
 
-      - name: Check if Stack Exists
-        id: check_stack
-        run: |
-          if aws cloudformation describe-stacks --stack-name stack &> /dev/null; then
-            echo "StackExists=true"
-          else
-            echo "StackExists=false"
-          fi
-        continue-on-error: true
-
-      - name: Create or Update Stack
-        run: |
-          if [ "${{ steps.check_stack.outputs.StackExists }}" == "true" ]; then
-            aws cloudformation update-stack --stack-name stack --template-body file://.github/workflows/cloudformation-template.yaml --capabilities CAPABILITY_IAM
-          else
-            aws cloudformation create-stack --stack-name stack --template-body file://.github/workflows/cloudformation-template.yaml --capabilities CAPABILITY_IAM
-          fi
+      - name: Deploy to AWS CloudFormation
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: stack
+          template: file://.github/workflows/cloudformation-template.yaml
+          no-fail-on-empty-changeset: "1"
+          capabilities: "CAPABILITY_NAMED_IAM"
