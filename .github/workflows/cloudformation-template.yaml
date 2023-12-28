@@ -39,6 +39,10 @@ Resources:
             MinTTL: 0
             DefaultTTL: 86400
             MaxTTL: 31536000
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: 'none'
           - PathPattern: 'css/*'
             TargetOriginId: S3Origin
             ViewerProtocolPolicy: 'redirect-to-https'
@@ -49,6 +53,10 @@ Resources:
             MinTTL: 0
             DefaultTTL: 86400
             MaxTTL: 31536000
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: 'none'
           - PathPattern: 'js/*'
             TargetOriginId: S3Origin
             ViewerProtocolPolicy: 'redirect-to-https'
@@ -59,6 +67,10 @@ Resources:
             MinTTL: 0
             DefaultTTL: 86400
             MaxTTL: 31536000
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: 'none'
           - PathPattern: 'fonts/*'
             TargetOriginId: S3Origin
             ViewerProtocolPolicy: 'redirect-to-https'
@@ -69,6 +81,10 @@ Resources:
             MinTTL: 0
             DefaultTTL: 86400
             MaxTTL: 31536000
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: 'none'
 
 Outputs:
   BucketName:
