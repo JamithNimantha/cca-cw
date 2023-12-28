@@ -40,7 +40,7 @@ jobs:
       - name: Check if stack exists
         id: check_exists
         run: |
-          EXISTS=$(aws cloudformation describe-stacks --stack-name stack --query "Stacks[0].StackName" --output text)
+          EXISTS=$(aws cloudformation describe-stacks --stack-name stack --query "Stacks[0].StackName" --output text 2>/dev/null || echo "")
           if [ "$EXISTS" == "stack" ]; then
             echo "STACK_EXISTS=true" >> $GITHUB_ENV
           else
