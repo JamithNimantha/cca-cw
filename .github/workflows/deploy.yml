@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,10 +26,44 @@ jobs:
 #        run: |
 #          aws s3 sync . s3://cca-cw1-bucket --delete --exclude '.*/*' --exclude '.*'
 
-      - name: Deploy to AWS CloudFormation
+      - name: Check stack state
+        id: check_state
+        run: |
+          STATE=$(aws cloudformation describe-stacks --stack-name stack --query "Stacks[0].StackStatus" --output text)
+          echo "STACK_STATE=$STATE" >> $GITHUB_ENV
+
+      - name: Delete stack if in ROLLBACK_COMPLETE state
+        if: env.STACK_STATE == 'ROLLBACK_COMPLETE'
+        run: |
+          aws cloudformation delete-stack --stack-name stack
+
+      - name: Check if stack exists
+        id: check_exists
+        run: |
+          EXISTS=$(aws cloudformation describe-stacks --stack-name stack --query "Stacks[0].StackName" --output text)
+          if [ "$EXISTS" == "stack" ]; then
+            echo "STACK_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "STACK_EXISTS=false" >> $GITHUB_ENV
+          fi
+
+      - name: Create stack if not exists
+        if: env.STACK_EXISTS == 'false'
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
           name: stack
           template: .github/workflows/cloudformation-template.yaml
           no-fail-on-empty-changeset: "1"
           capabilities: "CAPABILITY_NAMED_IAM"
+
+#      - name: Deploy to AWS CloudFormation
+#        uses: aws-actions/aws-cloudformation-github-deploy@v1
+#        with:
+#          name: stack
+#          template: .github/workflows/cloudformation-template.yaml
+#          no-fail-on-empty-changeset: "1"
+#          capabilities: "CAPABILITY_NAMED_IAM"
+#        id: cfn
+#        continue-on-error: true
+
+
