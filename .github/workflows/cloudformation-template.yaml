@@ -32,6 +32,10 @@ Resources:
               - 'GET'
               - 'HEAD'
               - 'OPTIONS'
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: 'none'
             MinTTL: 0
             DefaultTTL: 86400
             MaxTTL: 31536000
