@@ -29,7 +29,7 @@ jobs:
       - name: Check stack state
         id: check_state
         run: |
-          STATE=$(aws cloudformation describe-stacks --stack-name stack --query "Stacks[0].StackStatus" --output text)
+          STATE=$(aws cloudformation describe-stacks --stack-name stack --query "Stacks[0].StackStatus" --output text 2>/dev/null || echo "")
           echo "STACK_STATE=$STATE" >> $GITHUB_ENV
 
       - name: Delete stack if in ROLLBACK_COMPLETE state
