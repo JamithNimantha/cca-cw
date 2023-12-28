@@ -36,6 +36,7 @@ jobs:
         if: env.STACK_STATE == 'ROLLBACK_COMPLETE'
         run: |
           aws cloudformation delete-stack --stack-name stack
+          aws cloudformation wait stack-delete-complete --stack-name stack
 
       - name: Check if stack exists
         id: check_exists
