@@ -55,9 +55,9 @@ jobs:
         run: |
           aws cloudformation describe-stacks --stack-name stack --query "Stacks[0].Outputs"
 
-      - name: Deploy to S3 bucket
-        run: |
-          BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name stack --query "Stacks[0].Outputs[?OutputKey=='BucketName'].OutputValue" --output text)
-          aws s3 sync src/ s3://$BUCKET_NAME --delete
+#      - name: Deploy to S3 bucket
+#        run: |
+#          BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name stack --query "Stacks[0].Outputs[?OutputKey=='BucketName'].OutputValue" --output text)
+#          aws s3 sync src/ s3://$BUCKET_NAME --delete
 
 

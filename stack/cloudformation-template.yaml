@@ -10,6 +10,13 @@ Resources:
       WebsiteConfiguration:
         IndexDocument: 'index.html'
         ErrorDocument: 'error.html'
+      OwnershipControls:
+        ObjectOwnership: BucketOwnerPreferred
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+          BlockPublicPolicy: false
+          IgnorePublicAcls: false
+          RestrictPublicBuckets: false
 #  S3BucketPolicy:
 #    Type: 'AWS::S3::BucketPolicy'
 #    Properties:
