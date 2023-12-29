@@ -5,7 +5,7 @@ Resources:
   S3Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: 'cca-cw1-bucket-1'
+      # BucketName: 'cca-cw1-bucket-1' # It's recommended to remove the BucketName to avoid global namespace issues
       AccessControl: 'PublicRead'
       WebsiteConfiguration:
         IndexDocument: 'index.html'
@@ -94,6 +94,17 @@ Resources:
 
 Outputs:
   BucketName:
+    Description: "Name of the S3 bucket"
     Value: !Ref S3Bucket
+
+  S3BucketWebsiteURL:
+    Description: "URL of the S3 Bucket Hosting the Website"
+    Value: !GetAtt [S3Bucket, WebsiteURL]
+
   DistributionId:
+    Description: "ID of the CloudFront distribution"
     Value: !Ref CloudFrontDistribution
+
+  DistributionDomainName:
+    Description: "Domain name of the CloudFront distribution"
+    Value: !GetAtt [CloudFrontDistribution, DomainName]
