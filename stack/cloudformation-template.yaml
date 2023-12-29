@@ -5,8 +5,6 @@ Resources:
   S3Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      # BucketName: 'cca-cw1-bucket-1' # It's recommended to remove the BucketName to avoid global namespace issues
-#      AccessControl: 'PublicRead'
       WebsiteConfiguration:
         IndexDocument: 'index.html'
         ErrorDocument: 'error.html'
@@ -37,9 +35,9 @@ Resources:
     Properties:
       DistributionConfig:
         Origins:
-          - DomainName: !GetAtt [S3Bucket, DomainName]
+          - DomainName: !GetAtt [ S3Bucket, DomainName ]
             Id: S3Origin
-            S3OriginConfig: {}
+            S3OriginConfig: { }
         Enabled: true
         DefaultRootObject: 'index.html'
         DefaultCacheBehavior:
@@ -121,7 +119,7 @@ Outputs:
 
   S3BucketWebsiteURL:
     Description: "URL of the S3 Bucket Hosting the Website"
-    Value: !GetAtt [S3Bucket, WebsiteURL]
+    Value: !GetAtt [ S3Bucket, WebsiteURL ]
 
   DistributionId:
     Description: "ID of the CloudFront distribution"
@@ -129,4 +127,4 @@ Outputs:
 
   DistributionDomainName:
     Description: "Domain name of the CloudFront distribution"
-    Value: !GetAtt [CloudFrontDistribution, DomainName]
+    Value: !GetAtt [ CloudFrontDistribution, DomainName ]
