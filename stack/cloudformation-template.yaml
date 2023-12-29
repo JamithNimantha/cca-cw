@@ -11,7 +11,8 @@ Resources:
         IndexDocument: 'index.html'
         ErrorDocument: 'error.html'
       OwnershipControls:
-        ObjectOwnership: BucketOwnerPreferred
+        Rules:
+          - ObjectOwnership: 'BucketOwnerPreferred'
       PublicAccessBlockConfiguration:
         BlockPublicAcls: false
         BlockPublicPolicy: false
