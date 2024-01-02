@@ -60,4 +60,9 @@ jobs:
           BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name stack --query "Stacks[0].Outputs[?OutputKey=='BucketName'].OutputValue" --output text)
           aws s3 sync src/ s3://$BUCKET_NAME --delete
 
+      - name: Invalidate CloudFront Cache
+        run: |
+          DISTRIBUTION_ID=$(aws cloudformation describe-stacks --stack-name stack --query "Stacks[0].Outputs[?OutputKey=='DistributionId'].OutputValue" --output text)
+          aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+
 
